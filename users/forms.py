@@ -36,7 +36,7 @@ class CustomUserCreationForm(UserCreationForm):
                     "class": "form-control",
                     "placeholder": "Nombre",
                     "minlength": "2",
-                    "maxlength": "50",
+                    "maxlength": "100",
                     "title": "El nombre debe tener entre 2 y 50 caracteres",
                     "required": "required",
                 }
@@ -46,7 +46,7 @@ class CustomUserCreationForm(UserCreationForm):
                     "class": "form-control",
                     "placeholder": "Apellidos",
                     "minlength": "2",
-                    "maxlength": "50",
+                    "maxlength": "100",
                     "title": "El apellido debe tener entre 2 y 50 caracteres",
                     "required": "required",
                 }
@@ -102,45 +102,63 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if not re.match(r"^[a-zA-Z0-9._%+-]+@utez\.edu\.mx$", email):
-            raise forms.ValidationError("El correo debe pertenecer al dominio @utez.edu.mx")
+            raise forms.ValidationError(
+                "El correo debe pertenecer al dominio @utez.edu.mx"
+            )
         return email
-    
+
     def clean_control_number(self):
         control_number = self.cleaned_data.get("control_number")
         print("Antes del if")
         if not re.match(r"^[0-9]{5}[A-Za-z]{2}[0-9]{3}$", control_number):
             print("Dentro del if")
-            raise forms.ValidationError("La matrícula debe ser alfanumerica y de 10 dígitos.")
+            raise forms.ValidationError(
+                "La matrícula debe ser alfanumerica y de 10 dígitos."
+            )
         return control_number
 
-    
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if len(name) < 2 or len(name) > 100:
+            raise forms.ValidationError("El nombre debe tener entre 2 y 100 caracteres.")
+        return name
+
+
+    def clean_surname(self):
+        surname = self.cleaned_data.get("surname")
+        if len(surname) < 2 or len(surname) > 100:
+            raise forms.ValidationError("El apellido debe tener entre 2 y 100 caracteres.")
+        return surname
+
+
+    def clean_age(self):
+        age = self.cleaned_data.get("age")
+        if age < 18 or age > 99:
+            raise forms.ValidationError("La edad debe estar entre 18 y 99 años.")
+        return age
+
     def clean_tel(self):
         tel = self.cleaned_data.get("tel")
         if not re.match(r"^[0-9]{10}$", tel):
-            raise forms.ValidationError("El teléfono debe contener exactamente 10 dígitos numéricos.")
+            raise forms.ValidationError(
+                "El teléfono debe contener exactamente 10 dígitos numéricos."
+            )
         return tel
-    
+
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")
         if not re.match(r"^(?=.*\d)(?=.*[A-Z])(?=.*[!#$%&?]).{8,}$", password1):
-            raise forms.ValidationError("Debe tener al menos 8 caracteres, incluir una mayúscula, un número y un símbolo (!, #, $, %, & o ?)")
+            raise forms.ValidationError(
+                "Debe tener al menos 8 caracteres, incluir una mayúscula, un número y un símbolo (!, #, $, %, & o ?)"
+            )
         return password1
-    
+
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 != password2:
             raise forms.ValidationError("Las contraseñas no coinciden.")
         return password2
-    
-    
-    
-    
-
-    
-    
-   
-    
 
 
 class CustomLoginForm(AuthenticationForm):
@@ -175,9 +193,6 @@ class CustomLoginForm(AuthenticationForm):
             if not user:
                 raise forms.ValidationError("Usuario o contraseña incorrectos.")
         return cleaned_data
-    
-    
-    
 
 
 class CustomUserLoginForm(AuthenticationForm):
