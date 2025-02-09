@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>Formulario</title>
+  </head>
+  <body>
+
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="text-center m-3">Registro</h1>
+            <!-- onsubmit="return validateForm()" -->
+            <!-- Se cambia el evento de validación al formulario -->
+            <form method="post" >
+            {% csrf_token %} {{ form.as_p }}
+            <div class="container text-center">
+              <button type="submit" class="btn btn-md bg-success-subtle">
+                Registrarse
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+   
+
+    {% include 'mensaje.html' %}
+
+    <script>
+      function validateForm() {
+        const d = document;
+        const email = d.getElementById("id_email");
+        const age = d.getElementById("id_age");
+        const password = d.getElementById("id_password1");
+        const password2 = d.getElementById("id_password2");
+        const matricula = d.getElementById("id_control_number");
+        const phoneNumber = d.getElementById("id_tel");
+
+        // Expresiones regulares
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@utez\.edu\.mx$/;
+        const hasNumber = /\d/;
+        const hasSymbol = /[!#$%&?]/;
+        const matriculaPattern = /^[a-zA-Z0-9]{10}$/;
+        const phoneNumberPattern = /^[0-9]{10}$/;
+        const hasMayus = /[A-Z]/;
+
+        // 1️⃣ Validación de Email
+        if (email.value.trim() === "") {
+          showAlert("Error", "El campo email es obligatorio", "error", email);
+          return false;
+        }
+
+        if (!emailPattern.test(email.value)) {
+          showAlert(
+            "Error",
+            "El email debe ser de la UTEZ (@utez.edu.mx)",
+            "error",
+            email
+          );
+          return false;
+        }
+
+        if (matricula.value.trim() === "") {
+          showAlert(
+            "Error",
+            "El campo matricula es obligatorio",
+            "error",
+            matricula
+          );
+          return false;
+        }
+
+        if (!matriculaPattern.test(matricula.value)) {
+          showAlert(
+            "Error",
+            "La matricula debe tener 10 caracteres",
+            "error",
+            matricula
+          );
+          return false;
+        }
+
+        // 2️⃣ Validación de Edad
+        if (age.value.trim() === "" || age.value < 18) {
+          showAlert(
+            "Error",
+            "Debes ser mayor de edad para registrarte",
+            "error",
+            age
+          );
+          return false;
+        }
+
+        if (!hasNumber.test(password.value)) {
+          showAlert(
+            "Error",
+            "La contraseña debe contener al menos un número",
+            "error",
+            password
+          );
+          return false;
+        }
+
+        if (!phoneNumber.value.trim() === "") {
+          showAlert(
+            "Error",
+            "El campo número de teléfono es obligatorio",
+            "error",
+            phoneNumber
+          );
+          return false;
+        }
+
+        if (phoneNumber.value.length < 10) {
+          showAlert(
+            "Error",
+            "El número de teléfono debe tener 10 dígitos",
+            "error",
+            phoneNumber
+          );
+          return false;
+        }
+
+        // 3️⃣ Validación de Contraseña
+        if (password.value.length < 8) {
+          showAlert(
+            "Error",
+            "La contraseña debe tener al menos 8 caracteres",
+            "error",
+            password
+          );
+          return false;
+        }
+
+        if (!hasSymbol.test(password.value)) {
+          showAlert(
+            "Error",
+            "La contraseña debe contener al menos un símbolo (!, #, $, %, & o ?)",
+            "error",
+            password
+          );
+          return false;
+        }
+
+        if (!hasMayus.test(password.value)) {
+          showAlert(
+            "Error",
+            "La contraseña debe contener al menos una mayúscula",
+            "error",
+            password
+          );
+          return false;
+        }
+
+        // 4️⃣ Validación de Coincidencia de Contraseñas
+        if (password.value !== password2.value) {
+          showAlert(
+            "Error",
+            "Las contraseñas no coinciden",
+            "error",
+            password2
+          );
+          return false;
+        }
+
+        return true;
+      }
+
+      // Función para mostrar alertas y enfocar el campo con error
+      function showAlert(title, text, icon, field) {
+        Swal.fire({
+          icon: icon,
+          title: title,
+          text: text,
+        }).then(() => {
+          field.focus(); // Enfocar el campo con error
+        });
+      }
+    </script>
+     <script
+     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+     crossorigin="anonymous"
+   ></script>
+  </body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Página infinita</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div>
+        <div class="container">
+            <div class="col">
+            <div class="row">
+                <div class="col-6 mt-5">
+                    <h1 class="display-4">Página infinita</h1>
+                    <p class="lead">
+                    Esta página se encuentra en un ciclo infinito. Por favor, vuelve a
+                    la página principal.
+                    
+                    </p>
+                </div>
+                <div class="col-6 mt-5">
+                   <img class="img-fluid" style="width: 500px; height: 500px;" src="https://i.scdn.co/image/ab67616d00001e02bbd45c8d36e0e045ef640411">
+                </div>
+                <div class="row mt-5" id="tarjetas">
+                    <h5>Contenido</h5>
+                   <p> lorem ipsummmmmmmmmmmmm</p>
+                
+                </div>
+            
+            </div>
+            </div>
+        </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      function loadCards (title, text) {
+        const d = document;
+        
+        var card = d.createElement('div');
+        card.setAttribute('class', 'card col-4');
+
+        var body = d.createElement('div');
+        body.setAttribute('class', 'card-body');
+
+        var h5 = d.createElement('h5');
+        h5.setAttribute('class', 'card-title');
+        h5.innerHTML = title;
+        
+        var p = d.createElement('p');
+        p.setAttribute('class', 'card-text');
+        p.innerHTML = text;
+
+        body.appendChild(h5);
+        body.appendChild(p);
+        card.appendChild(body);
+
+        d.getElementById('tarjetas').appendChild(card);
+      }
+
+      var i = 1;
+
+      window.addEventListener('scroll', () => {
+        if(window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+          for (let index = 0; index < 5; index++) {
+            if(i>100){break;}
+            var object = {
+              title : 'Título dinamico de card: ' + i,
+              text : 'Texto dinamico de card: ' + i
+            }
+            loadCards(object.title, object.text);
+            i++;
+          }
+        }
+      }); 
+
+    </script>
+  </body>
+</html>
