@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/error_logs/', get_error_logs, name='get_error_logs'),
     path('search/', search_view, name='search'),
     path('users/', include('users.urls')),
+    path('categoria/', include('categorias.urls')),
 ]
 
 

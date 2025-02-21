@@ -14,12 +14,16 @@ import os
 from pathlib import Path
 import environ 
 
+# Inicializa django-environ
 env = environ.Env()
+
+# Lee el archivo .env
 environ.Env.read_env()
 
+# settings.py
+SECRET_KEY = env('SECRET_KEY')
 GOOGLE_API_KEY = env('GOOGLE_API_KEY')
 SEARCH_ENGINE_ID = env('SEARCH_ENGINE_ID')
-SECRET_KEY = env('SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,7 +54,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    'users'
+    'users',
+    'categorias',
+    'productos'
 ]
 
 MIDDLEWARE = [
