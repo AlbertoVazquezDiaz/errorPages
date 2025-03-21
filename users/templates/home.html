@@ -7,5 +7,17 @@
 </head>
 <body>
     <h1>Hola</h1>
+    <a href="https://www.utez.edu.mx">Salir del sitio</a>
+    <script>
+        document.querySelector('a').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault()
+                documents.body.style.animation = 'fadeOut 2s forwards'
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 2000);
+            })
+        })
+    </script>
 </body>
 </html>

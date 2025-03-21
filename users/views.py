@@ -1,71 +1,26 @@
-import json
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
-from .forms import CustomUserCreationForm, CustomUserLoginForm
-from django.contrib.auth.decorators import login_required
-from .message import message as Message
+from .models import CustomUser
+from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
+from rest_framework import viewsets
+from .serializers import CustomTokenObtainSerializer, CustomUserSerializer
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
-def register_view(request):
-    if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Iniciar sesión después del registro
-            success_message = Message("success", "Registro exitoso", 200)
-            return render(
-                request, "home.html", {"message": json.dumps(success_message.to_dict())}
-            )
-        else:
-            error_message = Message("error", "Hubo un error en el registro", 400)
-            return render(
-                request,
-                "register.html",
-                {"form": form, "message": json.dumps(error_message.to_dict())},
-            )
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    renderer_classes = [JSONRenderer]
+    serializer_class = CustomUserSerializer
 
-    else:
-        form = CustomUserCreationForm()
+    # AUTENTICACIÓN
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    return render(request, "register.html", {"form": form})
+    def get_permissions(self):
+        if self.request.method in ["POST", "PUT", "DELETE"]:
+            return [IsAuthenticated()]
+        return []
 
-
-def login_view(request):
-    if request.method == "POST":
-        form = CustomUserLoginForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            success_message = Message("success", "Inicio de sesión exitoso", 200)
-            return render(
-                request, "home.html", {"message": json.dumps(success_message.to_dict())}
-            )
-        else:
-            error_message = Message("error", "Usuario o contraseña incorrectos", 401)
-            return render(
-                request,
-                "login.html",
-                {"form": form, "message": json.dumps(error_message.to_dict())},
-            )
-
-    else:
-        form = CustomUserLoginForm()
-
-    return render(request, "login.html", {"form": form})
-
-
-def logout_view(request):
-    logout(request)
-    message = Message(
-        "info",
-        "Se ha cerrado sesión exitosamente",
-        200,
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8MIbugIhZBykSmQcR0QPcfnPUBOZQ6bm35w&s",
-    )
-    print(message)
-    return render(request, "login.html", {"message": json.dumps(message.to_dict())})
-
-
-@login_required
-def home_view(request):
-    return render(request, "home.html")
+from rest_framework_simplejwt.views import TokenObtainPairView
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainSerializer

@@ -31,6 +31,8 @@ urlpatterns = [
     path('search/', search_view, name='search'),
     path('users/', include('users.urls')),
     path('categoria/', include('categorias.urls')),
+    path('api/alumnos/', include('alumnos.urls')),
+    path('productos/', include('productos.urls')),
 ]
 
 

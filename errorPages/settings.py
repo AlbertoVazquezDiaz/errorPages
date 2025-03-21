@@ -37,9 +37,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '127.0.0.1', 'localhost',
-]
+ALLOWED_HOSTS = ['*']
 
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -56,10 +54,21 @@ INSTALLED_APPS = [
     'app',
     'users',
     'categorias',
-    'productos'
+    'productos',
+    'rest_framework',
+    'alumnos',
+    'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -167,3 +176,5 @@ LOGIN_URL = '/users/login/'
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/users/login'
 
+
+CORS_ALLOW_ALL_ORIGINS = True
