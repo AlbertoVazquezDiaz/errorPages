@@ -12,21 +12,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-import environ 
+import environ
+
+# Define la ruta base del proyecto
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Inicializa django-environ
 env = environ.Env()
 
-# Lee el archivo .env
-environ.Env.read_env()
+# Lee el archivo .env desde la ruta correcta
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# settings.py
+# Usa la variable del entorno
 SECRET_KEY = env('SECRET_KEY')
-GOOGLE_API_KEY = env('GOOGLE_API_KEY')
-SEARCH_ENGINE_ID = env('SEARCH_ENGINE_ID')
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -109,7 +107,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'errores',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'PORT': '3306',
         'HOST': 'localhost',
     }
